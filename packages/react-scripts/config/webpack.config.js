@@ -122,33 +122,34 @@ module.exports = function (webpackEnv) {
         loader: require.resolve('css-loader'),
         options: cssOptions,
       },
-      {
-        // Options for PostCSS as we reference these options twice
-        // Adds vendor prefixing based on your specified browser support in
-        // package.json
-        loader: require.resolve('postcss-loader'),
-        options: {
-          postcssOptions: {
-            plugins: [
-              require('postcss-flexbugs-fixes'),
-              [
-                require('postcss-preset-env'),
-                {
-                  autoprefixer: {
-                    flexbox: 'no-2009',
-                  },
-                  stage: 3,
-                },
-              ],
-              // Adds PostCSS Normalize as the reset css with default options,
-              // so that it honors browserslist config in package.json
-              // which in turn let's users customize the target behavior as per their needs.
-              postcssNormalize(),
-            ],
-          },
-          sourceMap: isEnvProduction && shouldUseSourceMap,
-        },
-      },
+      //We remove postcss because its apparently not doing anything (zenduty edit)
+      // {
+      //   // Options for PostCSS as we reference these options twice
+      //   // Adds vendor prefixing based on your specified browser support in
+      //   // package.json
+      //   loader: require.resolve('postcss-loader'),
+      //   options: {
+      //     postcssOptions: {
+      //       plugins: [
+      //         require('postcss-flexbugs-fixes'),
+      //         [
+      //           require('postcss-preset-env'),
+      //           {
+      //             autoprefixer: {
+      //               flexbox: 'no-2009',
+      //             },
+      //             stage: 3,
+      //           },
+      //         ],
+      //         // Adds PostCSS Normalize as the reset css with default options,
+      //         // so that it honors browserslist config in package.json
+      //         // which in turn let's users customize the target behavior as per their needs.
+      //         postcssNormalize(),
+      //       ],
+      //     },
+      //     sourceMap: isEnvProduction && shouldUseSourceMap,
+      //   },
+      // },
     ].filter(Boolean);
     if (preProcessor) {
       loaders.push(
@@ -340,6 +341,8 @@ module.exports = function (webpackEnv) {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
+        // 'react/jsx-dev-runtime': require.resolve('react/jsx-dev-runtime'),
+        src: path.resolve(paths.appSrc, './'),
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile && {
           'react-dom$': 'react-dom/profiling',
@@ -379,7 +382,7 @@ module.exports = function (webpackEnv) {
           enforce: 'pre',
           exclude: /@babel(?:\/|\\{1,2})runtime/,
           test: /\.(js|mjs|jsx|ts|tsx|css)$/,
-          use: 'source-map-loader',
+          use: ['source-map-loader'],
         },
         {
           // "oneOf" will traverse all following loaders until one will
